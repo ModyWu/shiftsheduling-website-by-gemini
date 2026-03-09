@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧動態兼職排班系統</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+        // --- 內聯 SVG 圖示 ---
+        const IconCalendar = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>;
+        const IconShieldCheck = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>;
+        const IconPlay = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>;
+        const IconAlertCircle = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>;
+        const IconCheckCircle = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>;
+        const IconClock = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>;
+        const IconUsers = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>;
+        const IconTrash = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>;
+        const IconPlus = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>;
+        // 新增的圖示
+        const IconInfo = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>;
+        const IconCopy = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>;
+        const IconHome = ({ className }) => <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>;
+
+        // 複選選單元件
+        const MultiSelectDropdown = ({ options, selected, onChange }) => {
+            const [isOpen, setIsOpen] = useState(false);
+            const toggleOption = (opt) => {
+                if (selected.includes(opt)) {
+                    onChange(selected.filter(item => item !== opt));
+                } else {
+                    onChange([...selected, opt].sort((a, b) => a - b));
+                }
+            };
+            return (
+                <div className="relative flex-grow min-w-0">
+                    <div
+                        tabIndex={0}
+                        // 優化：拿掉 flex-wrap，加上 overflow-hidden 強制單行顯示不撐破格子
+                        className="w-full border border-slate-200 rounded-lg px-2 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 outline-none bg-white cursor-pointer min-h-[42px] flex items-center overflow-hidden"
+                        onClick={() => setIsOpen(!isOpen)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                setIsOpen(!isOpen);
+                            }
+                        }}
+                    >
+                        {selected.length === 0 ? (
+                            <span className="text-slate-400 px-1 truncate w-full">點擊選擇...</span>
+                        ) : (
+                            <div className="flex items-center gap-1 overflow-hidden w-full">
+                                {/* 優化：改為只顯示前2個日期，其餘轉為文字，徹底解決橫向空間不足 */}
+                                {selected.slice(0, 2).map(val => (
+                                    <span key={val} className="bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded text-xs whitespace-nowrap flex-shrink-0">{val}號</span>
+                                ))}
+                                {selected.length > 2 && (
+                                    <span className="text-xs text-slate-500 font-medium px-1 whitespace-nowrap flex-shrink-0">..等{selected.length}天</span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    {isOpen && (
+                        <>
+                            <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
+                            {/* 優化1：限制寬度並往左偏移(-left-16)，確保在手機上右側邊緣(7, 14號)絕對不會被切出螢幕 */}
+                            <div className="absolute z-[100] w-[280px] sm:w-[320px] mt-1 -left-16 sm:-left-8 bg-white border border-slate-200 rounded-xl shadow-2xl max-h-[400px] overflow-y-auto p-4">
+                                <div className="text-xs text-slate-400 mb-3 font-medium text-center">選擇可排班日期 (1~31)</div>
+                                {/* 優化2：強制 7 欄位曆法排列，並加入 aspect-square 讓按鈕變成好點擊的「大正方形」 */}
+                                <div className="grid grid-cols-7 gap-1.5">
+                                    {options.map(opt => (
+                                        <label key={opt} className={`flex items-center justify-center aspect-square rounded-lg cursor-pointer transition-colors ${selected.includes(opt) ? 'bg-indigo-500 text-white font-medium shadow-sm' : 'hover:bg-slate-100 text-slate-700'}`}>
+                                            <input
+                                                type="checkbox"
+                                                className="hidden"
+                                                checked={selected.includes(opt)}
+                                                onChange={() => toggleOption(opt)}
+                                            />
+                                            <span className="text-sm font-medium">{opt}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                                <div className="mt-4 flex justify-end">
+                                    <button onClick={() => setIsOpen(false)} className="text-sm bg-slate-100 hover:bg-slate-200 text-slate-600 px-4 py-2 rounded-lg font-bold transition-colors">
+                                        確認
+                                    </button>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </div>
+            );
+        };
+
+        function App() {
+            // 預設全域需求人數
+            const [nPerDay, setNPerDay] = useState(2);
+            // 新增：用來儲存特定日期的客製化需求人數 { 15: 4, 16: 3 }
+            const [customOverrides, setCustomOverrides] = useState({});
+            const [employees, setEmployees] = useState([
+                { id: 1, name: '王小明', dates: [1, 5, 12, 18], maxShifts: 3, weight: 1 },
+                { id: 2, name: '李大華', dates: [1, 5, 25], maxShifts: 2, weight: 0 },
+                { id: 3, name: '張阿寶', dates: [5, 12, 25], maxShifts: 2, weight: 0 },
+                { id: 4, name: '陳美麗', dates: [12, 18, 25], maxShifts: 3, weight: 0 },
+                { id: 5, name: '林快樂', dates: [1, 18], maxShifts: 1, weight: 0 },
+                { id: 6, name: '周星', dates: [5, 18], maxShifts: 2, weight: 0 }
+            ]);
+            const [results, setResults] = useState([]);
+            const [drawLogs, setDrawLogs] = useState([]);
+            const [empSummary, setEmpSummary] = useState([]);
+            const [error, setError] = useState('');
+            const [copied, setCopied] = useState(false); // 新增：控制複製成功狀態
+
+            // 洗牌演算法
+            const shuffleArray = (array) => {
+                const arr = [...array];
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            };
+
+            const updateEmployee = (id, field, value) => {
+                setEmployees(employees.map(emp => emp.id === id ? { ...emp, [field]: value } : emp));
+            };
+
+            // 動態調整某天的特定人數
+            const handleOverrideChange = (date, delta) => {
+                setCustomOverrides(prev => {
+                    const currentVal = prev[date] !== undefined ? prev[date] : nPerDay;
+                    const newVal = Math.max(1, currentVal + delta); // 最少 1 人
+                    
+                    // 如果調回預設值，就直接刪除該紀錄保持乾淨
+                    if (newVal === nPerDay) {
+                        const newObj = { ...prev };
+                        delete newObj[date];
+                        return newObj;
+                    }
+                    return { ...prev, [date]: newVal };
+                });
+            };
+
+            const handleGenerate = () => {
+                setError('');
+                const logs = [];
+                
+                if (nPerDay <= 0) return setError('每日上班人數必須大於 0。');
+
+                const parsedEmployees = employees.filter(e => e.name.trim() !== '');
+                if (parsedEmployees.length === 0) return setError('請至少填寫一筆有效的員工資料。');
+
+                const validEmployees = [];
+                const allDatesSet = new Set();
+                for (let i = 0; i < parsedEmployees.length; i++) {
+                    const emp = parsedEmployees[i];
+                    const maxShifts = parseInt(emp.maxShifts, 10);
+                    const weight = parseInt(emp.weight, 10) || 0;
+                    if (isNaN(maxShifts) || maxShifts <= 0) return setError(`員工 ${emp.name} 的最多排班天數錯誤。`);
+                    if (emp.dates.length === 0) return setError(`員工 ${emp.name} 未選擇任何可排班日期。`);
+                    validEmployees.push({
+                        name: emp.name.trim(),
+                        availableDates: [...emp.dates],
+                        maxShifts,
+                        remaining: maxShifts,
+                        weight: weight,
+                        dynamicWeight: weight, // 新增：用於排班過程中的動態權重加減
+                        scheduledDates: []
+                    });
+                    emp.dates.forEach(d => allDatesSet.add(d));
+                }
+
+                const requiredDates = [...allDatesSet].sort((a, b) => a - b);
+                if (requiredDates.length === 0) return setError('請確認至少有一位員工有選擇排班日期。');
+
+                logs.push(`【系統初始化】共載入 ${validEmployees.length} 位員工，本月共有 ${requiredDates.length} 天需排班，基礎需求 ${nPerDay} 人。`);
+
+                const initialDateCounts = {};
+                requiredDates.forEach(date => {
+                    initialDateCounts[date] = validEmployees.filter(emp => emp.availableDates.includes(date)).length;
+                });
+                let unscheduledDates = [...requiredDates];
+                const scheduleResult = {}; 
+
+                // 3. 開始核心排班邏輯
+                while (unscheduledDates.length > 0) {
+                    let dateAvailability = unscheduledDates.map(date => {
+                        const availableEmps = validEmployees.filter(emp => emp.availableDates.includes(date) && emp.remaining > 0);
+                        const currentCount = availableEmps.length;
+                        const dropCount = initialDateCounts[date] - currentCount;
+                        return { date, count: currentCount, pool: availableEmps, dropCount };
+                    });
+                    dateAvailability = shuffleArray(dateAvailability);
+                    dateAvailability.sort((a, b) => {
+                        if (a.count !== b.count) return a.count - b.count;
+                        return a.dropCount - b.dropCount;
+                    });
+                    const target = dateAvailability[0];
+                    const targetDate = target.date;
+                    let dailyPool = target.pool;
+                    // 【重點】讀取這天的實際需求人數（看有沒有被客製化微調過）
+                    const targetNPerDay = customOverrides[targetDate] !== undefined ? customOverrides[targetDate] : nPerDay;
+
+                    logs.push(`---`);
+                    logs.push(`[日期判定] 選擇排班日: ${targetDate} 號 (需求: ${targetNPerDay}人, 目前可排班 ${target.count} 人${target.dropCount > 0 ? `，流失 ${target.dropCount} 人` : ''})`);
+                    // 【重點優化】加入「公開擲骰子」機制 (幸運值)，徹底打破黑箱隨機，讓平手對決絕對公平且透明
+                    dailyPool.forEach(emp => {
+                        emp.luckyScore = Math.floor(Math.random() * 10000); // 每回合為每人發放 0~9999 的隨機幸運值
+                    });
+                    // 移除原本的隱藏洗牌，改用完全透明的幸運值排序
+                    dailyPool.sort((a, b) => {
+                        // 條件一：動態權重 (優先票) 絕對第一優先
+                        if (a.dynamicWeight !== b.dynamicWeight) return b.dynamicWeight - a.dynamicWeight;
+                        
+                        // 條件二：計算排班達成率 (已排天數 / 總上限天數)，達成率低者優先
+                        const aRate = (a.maxShifts - a.remaining) / a.maxShifts;
+                        const bRate = (b.maxShifts - b.remaining) / b.maxShifts;
+                        
+                        // 使用微小容差處理 JavaScript 浮點數精度問題
+                        if (Math.abs(aRate - bRate) > 0.0001) return aRate - bRate;
+
+                        // 條件三：若達成率相同 (例如一開始都是 0%)，給予「願意多上班者 (上限高)」絕對優勢
+                        if (a.maxShifts !== b.maxShifts) return b.maxShifts - a.maxShifts;
+
+                        // 條件四：若都相同，直接比本回合擲出的幸運值 (數字大者勝出)
+                        return b.luckyScore - a.luckyScore; 
+                    });
+
+                    const assignedToday = [];
+                    // 這裡改用 targetNPerDay 計算是否競爭
+                    const isCompetitive = dailyPool.length > targetNPerDay;
+                    // 這裡也改用 targetNPerDay 跑迴圈抽出對應人數
+                    for (let i = 0; i < targetNPerDay; i++) {
+                        if (i < dailyPool.length) {
+                            const pickedEmp = dailyPool[i];
+                            assignedToday.push(pickedEmp.name);
+                            
+                            let weightMsg = '';
+                            if (isCompetitive) {
+                                // 只有原本有優先票(權重>0)的人，才需要扣除權重。
+                                if (pickedEmp.dynamicWeight > 0) {
+                                    pickedEmp.dynamicWeight -= 1; 
+                                    weightMsg = `, 競爭消耗優先票(剩餘:${pickedEmp.dynamicWeight})`;
+                                } else {
+                                    weightMsg = `, 幸運值 ${pickedEmp.luckyScore} 勝出`;
+                                }
+                            } else {
+                                weightMsg = `, 無競爭保留權重(${pickedEmp.dynamicWeight})`;
+                            }
+
+                            pickedEmp.remaining -= 1;
+                            pickedEmp.scheduledDates.push(targetDate);
+                            
+                            // 計算目前的達成率供 Log 顯示
+                            const currentRate = Math.round(((pickedEmp.maxShifts - pickedEmp.remaining) / pickedEmp.maxShifts) * 100);
+                            logs.push(`  ✓ 指派: ${pickedEmp.name} (剩餘:${pickedEmp.remaining}, 達成率:${currentRate}%${weightMsg})`);
+                        } else {
+                            assignedToday.push("正職代班");
+                            logs.push(`  ⚠️ 缺人！該時段人力耗盡，指派: 正職代班`);
+                        }
+                    }
+
+                    scheduleResult[targetDate] = assignedToday;
+                    // 落選補償機制：如果有競爭，沒被選上的人權重 + 1
+                    if (isCompetitive) {
+                        const missedEmps = dailyPool.filter(emp => !assignedToday.includes(emp.name));
+                        if (missedEmps.length > 0) {
+                            missedEmps.forEach(emp => {
+                                emp.dynamicWeight += 1;
+                                logs.push(`  ⬆️ 補償: ${emp.name} 落榜 (幸運值 ${emp.luckyScore})，動態權重提升為 ${emp.dynamicWeight}`);
+                            });
+                        }
+                    }
+
+                    unscheduledDates = unscheduledDates.filter(d => d !== targetDate);
+                    const exhaustedEmps = validEmployees.filter(emp => emp.remaining === 0 && assignedToday.includes(emp.name));
+                    if(exhaustedEmps.length > 0) {
+                        logs.push(`  ℹ️ 注意: ${exhaustedEmps.map(e=>e.name).join(', ')} 已達排班上限，自動退出後續排班池。`);
+                    }
+                }
+
+                const finalSchedule = requiredDates.map(date => ({
+                    date,
+                    workers: scheduleResult[date] || []
+                }));
+                const summary = validEmployees.map(emp => ({
+                    name: emp.name,
+                    max: emp.maxShifts,
+                    actual: emp.maxShifts - emp.remaining,
+                    dates: emp.scheduledDates.sort((a,b)=>a-b),
+                    finalWeight: emp.dynamicWeight // 紀錄最終的動態權重，供下個月補償參考
+                }));
+                setResults(finalSchedule);
+                setEmpSummary(summary);
+                setDrawLogs(logs);
+                setCopied(false);
+            };
+
+            const handleCopy = () => {
+                const compensatedEmps = empSummary.filter(emp => emp.finalWeight > 0);
+                const text = compensatedEmps.map(e => `${e.name}\t加權: ${e.finalWeight}`).join('\n');
+                
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                textArea.remove();
+                
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            };
+
+            const ALL_MONTH_DATES = Array.from({ length: 31 }, (_, i) => i + 1);
+            // 即時計算出目前所有被員工選中的日期 (Reactive 魔法)
+            const activeDatesInRealTime = [...new Set(employees.filter(e => e.name.trim() !== '').flatMap(e => e.dates))].sort((a,b) => a - b);
+            return (
+                <div className="min-h-screen p-4 md:p-8 font-sans text-slate-800">
+                    <div className="max-w-7xl mx-auto space-y-6">
+                        
+                        {/* Header */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center justify-between">
+                            <div className="flex items-center space-x-4">
+                                <div className="bg-indigo-600 p-3 rounded-xl flex-shrink-0">
+                                    <IconCalendar className="w-8 h-8 text-white" />
+                                </div>
+                                <div>
+                                    <h1 className="text-2xl font-bold text-slate-900">智慧動態兼職排班系統</h1>
+                                    <p className="text-slate-500 text-sm mt-1">動態計算瓶頸日優先填補 ＆ 剩餘額度權重演算法</p>
+                                </div>
+                            </div>
+                            <a href="index.html" className="flex items-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-xl transition-colors shrink-0">
+                                <IconHome className="w-5 h-5" />
+                                <span className="hidden sm:block ml-2 text-sm font-bold">返回首頁</span>
+                            </a>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            
+                            {/* Left Column: Inputs */}
+                            <div className="lg:col-span-4 space-y-6">
+                                <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                                    <h2 className="text-lg font-bold mb-4 flex items-center text-slate-800">
+                                        <IconShieldCheck className="w-5 h-5 mr-2 text-indigo-500" />
+                                        設定排班條件
+                                    </h2>
+                                    
+                                    <div className="space-y-4">
+                                        <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-4">
+                                            <div>
+                                                <label className="block text-sm font-medium text-slate-700 mb-1">
+                                                    預設每日需求人數 (基礎值)
+                                                </label>
+                                                <input 
+                                                    type="number" 
+                                                    min="1" 
+                                                    className="w-full border border-slate-200 rounded-lg p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none" 
+                                                    value={nPerDay} 
+                                                    onChange={(e) => {
+                                                        setNPerDay(parseInt(e.target.value) || 1);
+                                                        setCustomOverrides({}); // 更改基準值時，重置所有客製化微調
+                                                    }} 
+                                                />
+                                            </div>
+
+                                            {/* 動態出現的微調面板：只要有人選了日期就會長出來 */}
+                                            {activeDatesInRealTime.length > 0 && (
+                                                <div className="pt-2 border-t border-slate-200">
+                                                    <label className="block text-xs font-bold text-slate-500 mb-2">
+                                                        特定日期需求微調 (即時偵測可選日期)
+                                                    </label>
+                                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                                        {activeDatesInRealTime.map(date => {
+                                                            const isCustom = customOverrides[date] !== undefined;
+                                                            const currentN = isCustom ? customOverrides[date] : nPerDay;
+                                                            
+                                                            return (
+                                                                <div key={date} className={`flex flex-col items-center justify-between p-1.5 border rounded-lg transition-colors ${isCustom ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-slate-200'}`}>
+                                                                    <span className={`text-xs font-bold mb-1 ${isCustom ? 'text-indigo-700' : 'text-slate-600'}`}>{date}號</span>
+                                                                    <div className="flex items-center bg-white rounded-md border border-slate-200 shadow-sm w-full justify-between overflow-hidden">
+                                                                        <button onClick={() => handleOverrideChange(date, -1)} className="w-6 py-0.5 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 border-r border-slate-100 flex justify-center items-center">-</button>
+                                                                        <span className="text-xs font-medium px-1 text-center">{currentN}</span>
+                                                                        <button onClick={() => handleOverrideChange(date, 1)} className="w-6 py-0.5 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 border-l border-slate-100 flex justify-center items-center">+</button>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-700 mb-1 mt-6">員工排班意願資料</label>
+                                            {/* 優化3：移除 overflow-x-auto，避免它的「隱藏溢出特性」把彈出選單的右半部給切斷 */}
+                                            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                                                <div className="flex text-xs font-bold text-slate-500 mb-2 px-1 min-w-[320px]">
+                                                    <div className="w-[25%] shrink-0">姓名</div>
+                                                    <div className="flex-1 pl-2 min-w-0">可排日期 (點擊選單)</div>
+                                                    {/* 優化：稍微縮小右側輸入框的寬度 w-16 -> w-14 */}
+                                                    <div className="w-14 pl-1 text-center shrink-0" title="最多排班天數">上限</div>
+                                                    <div className="w-14 pl-1 text-center shrink-0" title="上月缺額或優先權重">加權</div>
+                                                    <div className="w-8 shrink-0"></div>
+                                                </div>
+                                                
+                                                <div className="space-y-2 min-w-[320px]">
+                                                    {employees.map((emp) => (
+                                                        <div key={emp.id} className="flex gap-2 items-start">
+                                                            <input
+                                                                type="text"
+                                                                className="w-[25%] shrink-0 border border-slate-200 rounded-lg px-2 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                                                                placeholder="姓名"
+                                                                value={emp.name}
+                                                                onChange={(e) => updateEmployee(emp.id, 'name', e.target.value)}
+                                                            />
+                                                            <div className="flex-1 min-w-0">
+                                                                <MultiSelectDropdown
+                                                                    options={ALL_MONTH_DATES}
+                                                                    selected={emp.dates}
+                                                                    onChange={(newDates) => updateEmployee(emp.id, 'dates', newDates)}
+                                                                />
+                                                            </div>
+                                                            <input
+                                                                type="number"
+                                                                min="1"
+                                                                className="w-14 shrink-0 border border-slate-200 rounded-lg px-1 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none text-center"
+                                                                placeholder="天數"
+                                                                title="最多排班天數"
+                                                                value={emp.maxShifts}
+                                                                onChange={(e) => updateEmployee(emp.id, 'maxShifts', e.target.value)}
+                                                            />
+                                                            <input
+                                                                type="number"
+                                                                min="0"
+                                                                className="w-14 shrink-0 border border-slate-200 rounded-lg px-1 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none text-center"
+                                                                placeholder="加權"
+                                                                title="給予優先排班的加權分數"
+                                                                value={emp.weight}
+                                                                onChange={(e) => updateEmployee(emp.id, 'weight', e.target.value)}
+                                                            />
+                                                            <button
+                                                                onClick={() => setEmployees(employees.filter(e => e.id !== emp.id))}
+                                                                className="w-8 h-[42px] flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0"
+                                                                title="刪除"
+                                                            >
+                                                                <IconTrash className="w-4 h-4" />
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                
+                                                <button
+                                                    onClick={() => setEmployees([...employees, { id: Date.now(), name: '', dates: [], maxShifts: '', weight: '' }])}
+                                                    className="w-full mt-3 py-2 border-2 border-dashed border-slate-200 text-slate-500 rounded-lg text-sm font-medium hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50 transition-colors flex items-center justify-center"
+                                                >
+                                                    <IconPlus className="w-4 h-4 mr-1" />
+                                                    新增員工
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* 新增：排序規則說明區塊 */}
+                                        <div className="bg-indigo-50/80 border border-indigo-100 rounded-xl p-4 text-indigo-900 shadow-sm">
+                                            <h3 className="text-sm font-bold mb-2 flex items-center text-indigo-800">
+                                                <IconInfo className="w-4 h-4 mr-1.5" />
+                                                系統排班與順位規則
+                                            </h3>
+                                            <ul className="text-xs space-y-2 leading-relaxed">
+                                                <li className="flex items-start"><span className="mr-1.5 text-indigo-400">◆</span> 優先處理「目前可排班人數最少」的日子 (瓶頸日)。</li>
+                                                <li className="flex items-start"><span className="mr-1.5 text-indigo-400">◆</span> 遇到競爭時，人員錄取順位依次為：
+                                                    <div className="ml-2 mt-1 space-y-0.5 text-indigo-700 font-medium">
+                                                        <p>① <span className="bg-indigo-100 px-1 rounded">加權分數</span> (高者絕對優先)</p>
+                                                        <p>② <span className="bg-indigo-100 px-1 rounded">班表達成率</span> (目前已排比例低者優先，確保均霑)</p>
+                                                        <p>③ <span className="bg-indigo-100 px-1 rounded">可排上限</span> (達成率相同時，願意排較多天者優先)</p>
+                                                        <p>④ <span className="bg-indigo-100 px-1 rounded">幸運數值</span> (平手時系統擲骰對決)</p>
+                                                    </div>
+                                                </li>
+                                                <li className="flex items-start"><span className="mr-1.5 text-indigo-400">◆</span> <span className="text-pink-600 font-bold">補償機制</span>：競爭落榜者，動態權重將自動 +1。</li>
+                                            </ul>
+                                        </div>
+
+                                        {error && (
+                                            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm flex items-start">
+                                                <IconAlertCircle className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
+                                                <span>{error}</span>
+                                            </div>
+                                        )}
+
+                                        <button onClick={handleGenerate} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-xl shadow-sm transition-colors flex items-center justify-center mt-4">
+                                            <IconPlay className="w-4 h-4 mr-2" />
+                                            開始智慧運算
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right Column: Results */}
+                            <div className="lg:col-span-8 space-y-6">
+                                {results.length > 0 ? (
+                                    <>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            {/* 排班表 */}
+                                            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col h-[400px]">
+                                                <h2 className="text-lg font-bold mb-4 flex items-center text-slate-800 flex-shrink-0">
+                                                    <IconCheckCircle className="w-5 h-5 mr-2 text-emerald-500" />
+                                                    最終班表 (依日期排序)
+                                                </h2>
+                                                <div className="space-y-3 overflow-y-auto pr-2 flex-grow">
+                                                    {[...results].sort((a, b) => a.date - b.date).map((item, idx) => (
+                                                        <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-xl">
+                                                            <div className="flex items-center mb-2 sm:mb-0">
+                                                                <span className="bg-indigo-100 text-indigo-700 font-bold w-10 h-10 rounded-lg flex items-center justify-center mr-3 shrink-0">{item.date}</span>
+                                                                <span className="text-sm font-medium text-slate-500">號</span>
+                                                            </div>
+                                                            <div className="flex flex-wrap gap-2 justify-end">
+                                                                {item.workers.map((worker, wIdx) => (
+                                                                    <span key={wIdx} className={`border px-3 py-1 rounded-full text-sm font-medium shadow-sm ${worker === '正職代班' ? 'bg-amber-50 border-amber-200 text-amber-700' : 'bg-white border-slate-200 text-slate-700'}`}>
+                                                                        {worker}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            {/* 員工時數摘要 */}
+                                            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col h-[400px]">
+                                                <h2 className="text-lg font-bold mb-4 flex items-center text-slate-800 flex-shrink-0">
+                                                    <IconUsers className="w-5 h-5 mr-2 text-indigo-500" />
+                                                    員工排班時數摘要
+                                                </h2>
+                                                <div className="space-y-3 overflow-y-auto pr-2 flex-grow">
+                                                    {empSummary.map((emp, idx) => (
+                                                        <div key={idx} className="p-3 bg-white border border-slate-200 rounded-xl shadow-sm">
+                                                            <div className="flex justify-between items-center mb-2">
+                                                                <span className="font-bold text-slate-700">{emp.name}</span>
+                                                                <span className={`text-xs px-2 py-1 rounded-full font-medium ${emp.actual === emp.max ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
+                                                                    已排 {emp.actual} / 上限 {emp.max}
+                                                                </span>
+                                                            </div>
+                                                            <div className="text-sm text-slate-500">
+                                                                排定日期: {emp.dates.length > 0 ? emp.dates.map(d => `${d}號`).join(', ') : '無'}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* 修改：將下方的區塊改為 Grid，加入「權重補償名單」 */}
+                                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                            {/* 邏輯歷程紀錄 */}
+                                            <div className="lg:col-span-2 bg-slate-900 rounded-2xl shadow-sm p-6 text-slate-300 font-mono text-sm h-[300px] flex flex-col">
+                                                <h2 className="text-lg font-bold mb-4 flex items-center text-white font-sans flex-shrink-0">
+                                                    <IconClock className="w-5 h-5 mr-2 text-slate-400" />
+                                                    動態優先度運算歷程 (檢視運算邏輯)
+                                                </h2>
+                                                <div className="overflow-y-auto space-y-1 pr-2 text-xs md:text-sm flex-grow">
+                                                    {drawLogs.map((log, idx) => (
+                                                        <div key={idx} className={`${log.includes('---') ? 'text-indigo-400 mt-4 font-bold' : log.includes('⚠️') ? 'text-amber-400' : log.includes('ℹ️') ? 'text-emerald-400' : log.includes('[日期判定]') ? 'text-white font-medium' : 'text-slate-400'}`}>
+                                                            {log}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            {/* 下月補償名單 */}
+                                            <div className="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col h-[300px]">
+                                                <div className="flex items-center justify-between mb-4 flex-shrink-0">
+                                                    <h2 className="text-base font-bold flex items-center text-slate-800">
+                                                        <IconInfo className="w-5 h-5 mr-1.5 text-amber-500" />
+                                                        下月加權補償建議
+                                                    </h2>
+                                                </div>
+                                                {empSummary.filter(emp => emp.finalWeight > 0).length > 0 ? (
+                                                    <div className="flex flex-col flex-grow overflow-hidden">
+                                                        <p className="text-xs text-slate-500 mb-3 flex-shrink-0">
+                                                            以下人員因遭遇競爭落榜 (或持有未使用完之權重)，建議於下月給予優先加權：
+                                                        </p>
+                                                        <div className="bg-amber-50/50 border border-amber-100 rounded-xl p-3 overflow-y-auto flex-grow mb-3 space-y-2">
+                                                            {empSummary.filter(emp => emp.finalWeight > 0).sort((a,b)=>b.finalWeight - a.finalWeight).map(emp => (
+                                                                <div key={emp.name} className="flex justify-between items-center bg-white p-2 rounded-lg border border-amber-100 shadow-sm">
+                                                                    <span className="font-bold text-slate-700 text-sm">{emp.name}</span>
+                                                                    <span className="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-1 rounded">加權: {emp.finalWeight}</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                        <button
+                                                            onClick={handleCopy}
+                                                            className={`w-full py-2.5 rounded-xl font-medium text-sm flex items-center justify-center transition-colors flex-shrink-0 ${copied ? 'bg-emerald-500 text-white' : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-600'}`}
+                                                        >
+                                                            {copied ? (
+                                                                <><IconCheckCircle className="w-4 h-4 mr-1.5" /> 已複製名單！</>
+                                                            ) : (
+                                                                <><IconCopy className="w-4 h-4 mr-1.5" /> 一鍵複製名單</>
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex flex-col items-center justify-center flex-grow text-center">
+                                                        <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                                                            <IconCheckCircle className="w-6 h-6 text-slate-300" />
+                                                        </div>
+                                                        <span className="text-sm font-bold text-slate-500">本月無累積加權者</span>
+                                                        <p className="text-xs text-slate-400 mt-1">大家的班表都排得很順利！</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-12 flex flex-col items-center justify-center text-center h-full min-h-[400px]">
+                                        <div className="bg-indigo-50 w-20 h-20 rounded-full flex items-center justify-center mb-4">
+                                            <IconUsers className="w-10 h-10 text-indigo-300" />
+                                        </div>
+                                        <h3 className="text-lg font-bold text-slate-700 mb-2">等待參數輸入</h3>
+                                        <p className="text-slate-500 text-sm max-w-sm">
+                                            請在左側依序填寫日期與員工意願，點擊「開始智慧運算」後，系統將自動計算最無爭議的排班結果。
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
