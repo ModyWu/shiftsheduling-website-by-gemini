@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智慧動態兼職排班系統 (方案A)</title>
+    <title>智慧動態兼職排班系統</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -101,10 +101,12 @@
             // 用來儲存特定日期的客製化需求人數 { 15: 4, 16: 3 }
             const [customOverrides, setCustomOverrides] = useState({});
             const [employees, setEmployees] = useState([
-                { id: 1, name: '緯哥', dates: [19, 26], maxShifts: 10, weight: 1 },
-                { id: 2, name: '阿珠', dates: [19, 26], maxShifts: 4, weight: 0 },
-                { id: 3, name: '如如', dates: [19, 26], maxShifts: 4, weight: 0 },
-                { id: 4, name: '小明', dates: [1, 5, 12, 18], maxShifts: 3, weight: 0 }
+                { id: 1, name: '王小明', dates: [1, 5, 12, 18], maxShifts: 3, weight: 1 },
+                { id: 2, name: '李大華', dates: [1, 5, 25], maxShifts: 2, weight: 0 },
+                { id: 3, name: '張阿寶', dates: [5, 12, 25], maxShifts: 2, weight: 0 },
+                { id: 4, name: '陳美麗', dates: [12, 18, 25], maxShifts: 3, weight: 0 },
+                { id: 5, name: '林快樂', dates: [1, 18], maxShifts: 1, weight: 0 },
+                { id: 6, name: '周星', dates: [5, 18], maxShifts: 2, weight: 0 }
             ]);
             const [results, setResults] = useState([]);
             const [drawLogs, setDrawLogs] = useState([]);
@@ -311,7 +313,7 @@
                                 </div>
                                 <div>
                                     <h1 className="text-2xl font-bold text-slate-900">智慧動態兼職排班系統</h1>
-                                    <p className="text-slate-500 text-sm mt-1">動態計算瓶頸日優先填補 ＆ 眾生平等隨機對決</p>
+                                    <p className="text-slate-500 text-sm mt-1">動態計算瓶頸日優先填補 ＆ 隨機對決</p>
                                 </div>
                             </div>
                             <a href="index.html" className="flex items-center text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-xl transition-colors shrink-0">
@@ -446,14 +448,14 @@
                                         <div className="bg-indigo-50/80 border border-indigo-100 rounded-xl p-4 text-indigo-900 shadow-sm">
                                             <h3 className="text-sm font-bold mb-2 flex items-center text-indigo-800">
                                                 <IconInfo className="w-4 h-4 mr-1.5" />
-                                                系統排班與順位規則 (方案A：眾生平等制)
+                                                系統排班與順位規則 (隨機)
                                             </h3>
                                             <ul className="text-xs space-y-2 leading-relaxed">
                                                 <li className="flex items-start"><span className="mr-1.5 text-indigo-400">◆</span> 優先處理「目前可排班人數最少」的日子 (瓶頸日)。</li>
                                                 <li className="flex items-start"><span className="mr-1.5 text-indigo-400">◆</span> 遇到競爭時，人員錄取順位依次為：
                                                     <div className="ml-2 mt-1 space-y-0.5 text-indigo-700 font-medium">
                                                         <p>① <span className="bg-indigo-100 px-1 rounded">加權分數</span> (高者絕對優先)</p>
-                                                        <p>② <span className="bg-indigo-100 px-1 rounded">幸運數值</span> (無分上限多寡，一律擲骰對決)</p>
+                                                        <p>② <span className="bg-indigo-100 px-1 rounded">幸運數值</span> (無分上限多寡，一律隨機對決)</p>
                                                     </div>
                                                 </li>
                                                 <li className="flex items-start"><span className="mr-1.5 text-indigo-400">◆</span> <span className="text-pink-600 font-bold">補償機制</span>：競爭落榜者，動態權重將自動 +1。</li>
@@ -611,4 +613,5 @@
         root.render(<App />);
     </script>
 </body>
+
 </html>
