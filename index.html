@@ -1,55 +1,54 @@
-!DOCTYPE html
-html lang=zh-TW
-head
-    meta charset=UTF-8
-    meta name=viewport content=width=device-width, initial-scale=1.0
-    title智慧排班與抽籤工具集title
-    script src=httpscdn.tailwindcss.comscript
-head
-body class=bg-slate-50 min-h-screen p-4 mdp-8 font-sans text-slate-800 flex items-center justify-center
-    div class=max-w-4xl mx-auto w-full space-y-8
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧排班與抽籤工具集</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 min-h-screen p-4 md:p-8 font-sans text-slate-800 flex items-center justify-center">
+    <div class="max-w-4xl mx-auto w-full space-y-8">
         
-        div class=text-center space-y-2
-            h1 class=text-3xl mdtext-4xl font-bold text-slate-900智慧排班與抽籤工具集h1
-            p class=text-slate-500請選擇適合您團隊當前需求的排班演算法p
-        div
+        <div class="text-center space-y-2">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">智慧排班與抽籤工具集</h1>
+            <p class="text-slate-500">請選擇適合您團隊當前需求的排班演算法</p>
+        </div>
 
-        div class=grid grid-cols-1 mdgrid-cols-2 gap-6
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
-            a href=draw.html class=block bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hovershadow-md hoverborder-indigo-300 transition-all group
-                div class=bg-indigo-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hoverbg-indigo-600 transition-colors
-                    svg class=w-6 h-6 text-indigo-600 group-hovertext-white xmlns=httpwww.w3.org2000svg fill=none viewBox=0 0 24 24 stroke=currentColor stroke-width=2path stroke-linecap=round stroke-linejoin=round d=M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z svg
-                div
-                h2 class=text-xl font-bold text-slate-800 mb-2兼職抽籤系統h2
-                p class=text-slate-500 text-sm結合亂數日期與保底優先機制的公平排班工具，適合單純依賴機率與歷史補償的情境。p
-            a
+            <a href="draw.html" class="block bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-indigo-300 transition-all group">
+                <div class="bg-indigo-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:bg-indigo-600 transition-colors">
+                    <svg class="w-6 h-6 text-indigo-600 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                </div>
+                <h2 class="text-xl font-bold text-slate-800 mb-2">兼職抽籤系統</h2>
+                <p class="text-slate-500 text-sm">結合亂數日期與保底優先機制的公平排班工具，適合單純依賴機率與歷史補償的情境。</p>
+            </a>
 
-            a href=schedule-random.html class=block bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hovershadow-md hoverborder-indigo-300 transition-all group
-                div class=bg-indigo-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hoverbg-indigo-600 transition-colors
-                    svg class=w-6 h-6 text-indigo-600 group-hovertext-white xmlns=httpwww.w3.org2000svg fill=none viewBox=0 0 24 24 stroke=currentColor stroke-width=2path stroke-linecap=round stroke-linejoin=round d=M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z svg
-                div
-                h2 class=text-xl font-bold text-slate-800 mb-2智慧排班 (眾生平等制)h2
-                p class=text-slate-500 text-sm動態計算瓶頸日優先填補。競爭時無分排班上限多寡，一律依賴加權分數與擲骰對決。p
-            a
+            <a href="schedule-random.html" class="block bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-indigo-300 transition-all group">
+                <div class="bg-indigo-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:bg-indigo-600 transition-colors">
+                    <svg class="w-6 h-6 text-indigo-600 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </div>
+                <h2 class="text-xl font-bold text-slate-800 mb-2">智慧排班 (眾生平等制)</h2>
+                <p class="text-slate-500 text-sm">動態計算瓶頸日優先填補。競爭時無分排班上限多寡，一律依賴加權分數與擲骰對決。</p>
+            </a>
 
-            a href=schedule-remain.html class=block bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hovershadow-md hoverborder-indigo-300 transition-all group
-                div class=bg-indigo-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hoverbg-indigo-600 transition-colors
-                    svg class=w-6 h-6 text-indigo-600 group-hovertext-white xmlns=httpwww.w3.org2000svg fill=none viewBox=0 0 24 24 stroke=currentColor stroke-width=2path stroke-linecap=round stroke-linejoin=round d=M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z svg
-                div
-                h2 class=text-xl font-bold text-slate-800 mb-2智慧排班 (剩餘額度優先)h2
-                p class=text-slate-500 text-sm優先保障還沒排滿的人！競爭時優先錄取「剩餘可排額度」較多者，確保大家都有班上。p
-            a
+            <a href="schedule-remain.html" class="block bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-indigo-300 transition-all group">
+                <div class="bg-indigo-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:bg-indigo-600 transition-colors">
+                    <svg class="w-6 h-6 text-indigo-600 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                </div>
+                <h2 class="text-xl font-bold text-slate-800 mb-2">智慧排班 (剩餘額度優先)</h2>
+                <p class="text-slate-500 text-sm">優先保障還沒排滿的人！競爭時優先錄取「剩餘可排額度」較多者，確保大家都有班上。</p>
+            </a>
 
-            a href=schedule-rate.html class=block bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hovershadow-md hoverborder-indigo-300 transition-all group
-                div class=bg-indigo-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hoverbg-indigo-600 transition-colors
-                    svg class=w-6 h-6 text-indigo-600 group-hovertext-white xmlns=httpwww.w3.org2000svg fill=none viewBox=0 0 24 24 stroke=currentColor stroke-width=2path stroke-linecap=round stroke-linejoin=round d=M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z path stroke-linecap=round stroke-linejoin=round d=M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z svg
-                div
-                h2 class=text-xl font-bold text-slate-800 mb-2智慧排班 (達成率優先)h2
-                p class=text-slate-500 text-sm最細膩的演算法！依據「目前已排比例 (達成率)」進行排序，比例低者優先，確保雨露均霑。p
-            a
+            <a href="schedule-rate.html" class="block bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-indigo-300 transition-all group">
+                <div class="bg-indigo-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:bg-indigo-600 transition-colors">
+                    <svg class="w-6 h-6 text-indigo-600 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path stroke-linecap="round" stroke-linejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>
+                </div>
+                <h2 class="text-xl font-bold text-slate-800 mb-2">智慧排班 (達成率優先)</h2>
+                <p class="text-slate-500 text-sm">最細膩的演算法！依據「目前已排比例 (達成率)」進行排序，比例低者優先，確保雨露均霑。</p>
+            </a>
 
-        div
-    div
-body
-
-html
+        </div>
+    </div>
+</body>
+</html>
