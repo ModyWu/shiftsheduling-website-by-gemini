@@ -101,10 +101,12 @@
             // 用來儲存特定日期的客製化需求人數 { 15: 4, 16: 3 }
             const [customOverrides, setCustomOverrides] = useState({});
             const [employees, setEmployees] = useState([
-                { id: 1, name: '緯哥', dates: [19, 26], maxShifts: 10, weight: 1 },
-                { id: 2, name: '阿珠', dates: [19, 26], maxShifts: 4, weight: 0 },
-                { id: 3, name: '如如', dates: [19, 26], maxShifts: 4, weight: 0 },
-                { id: 4, name: '小明', dates: [1, 5, 12, 18], maxShifts: 3, weight: 0 }
+                { id: 1, name: '王小明', dates: [1, 5, 12, 18], maxShifts: 3, weight: 1 },
+                { id: 2, name: '李大華', dates: [1, 5, 25], maxShifts: 2, weight: 0 },
+                { id: 3, name: '張阿寶', dates: [5, 12, 25], maxShifts: 2, weight: 0 },
+                { id: 4, name: '陳美麗', dates: [12, 18, 25], maxShifts: 3, weight: 0 },
+                { id: 5, name: '林快樂', dates: [1, 18], maxShifts: 1, weight: 0 },
+                { id: 6, name: '周星', dates: [5, 18], maxShifts: 2, weight: 0 }
             ]);
             const [results, setResults] = useState([]);
             const [drawLogs, setDrawLogs] = useState([]);
@@ -614,4 +616,5 @@
         root.render(<App />);
     </script>
 </body>
+
 </html>
